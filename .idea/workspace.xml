@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0cb1209f-b11d-423d-83b7-957fa0d4242e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/python-projects.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/highscores.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/archery_game.py" beforeDir="false" afterPath="$PROJECT_DIR$/archery_game.py" afterDir="false" />
+    <list default="true" id="c89bf9b9-1ed5-4039-ba03-f17e2193e59b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/arrow_game2/highscores.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arrow_game2/archery_game.py" beforeDir="false" afterPath="$PROJECT_DIR$/arrow_game2/archery_game.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,12 +12,10 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="1Wcj767GOfWa7y6GsiFBW0SLhNT" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectId" id="1WcnI5v7f69Tqii8OOMlBkUDfbv" />
   <component name="PropertiesComponent">
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
@@ -40,11 +35,11 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="0cb1209f-b11d-423d-83b7-957fa0d4242e" name="Default Changelist" comment="" />
-      <created>1579455607146</created>
+      <changelist id="c89bf9b9-1ed5-4039-ba03-f17e2193e59b" name="Default Changelist" comment="" />
+      <created>1579457667033</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1579455607146</updated>
+      <updated>1579457667033</updated>
     </task>
     <servers />
   </component>

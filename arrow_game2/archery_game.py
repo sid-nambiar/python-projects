@@ -10,6 +10,9 @@ screen = pygame.display.set_mode([640,480])
 white = [255, 255, 255]
 
 #constants
+firstTime = True
+BESTSCORE = 0
+highscores = open('highscores.txt', 'a+')
 TARGET_COLOR_HEIGHT = 10
 TARGET_X = 590
 TARGET_WIDTH = 10
@@ -71,6 +74,18 @@ def moveArrows():
     for index in range(len(arrows_x)):
         arrows_x[index] += ARROW_SPEED
 
+def writeHighScore():
+    highscores.write(str(score) + '\n')
+
+def readHighScores():
+    global BESTSCORE
+    highscores_read = open('highscores.txt', 'r')
+    file_lines=highscores_read.readlines()
+    scores = []
+    for line in file_lines:
+        scores.append(int(line))
+    BESTSCORE = max(scores)
+
 
 def seeIfHitTarget():
     global score
@@ -126,10 +141,14 @@ def drawArrows():
 running = True
 #game loop
 while running:
+    if firstTime == True:
+        readHighScores()
+        print(str(BESTSCORE))
     for event in pygame.event.get():
         #check if you've exited the game
         if event.type == pygame.QUIT:
             running = False
+            writeHighScore()
 
         #check if you clicked
         if event.type == pygame.MOUSEBUTTONDOWN and drawing_bow == False:
@@ -181,6 +200,7 @@ while running:
 
     #handle collisions after updating displacy
     seeIfHitTarget()
+    firstTime= False
 
 
 pygame.quit()
