@@ -5,20 +5,23 @@
 
 
 import pygame, sys
+import gradient
 pygame.init()
-screen = pygame.display.set_mode([640,480])
-white = [255, 255, 255]
+screen = pygame.display.set_mode([640, 480])
+
 
 #constants
+white=(255 ,255, 255)
+blue= (0, 170, 255)
 firstTime = True
 BESTSCORE = 0
 highscores = open('highscores.txt', 'a+')
-TARGET_COLOR_HEIGHT = 10
+TARGET_COLOR_HEIGHT = 20
 TARGET_X = 590
-TARGET_WIDTH = 10
+TARGET_WIDTH = 20
 TARGET_SPEED = 6
 ARROW_SPEED = 20 #don't change, otherwise collision detection might break
-ARROW_LENGTH = 20 #don't change, otherwise collision detection might break
+ARROW_LENGTH = 30 #don't change, otherwise collision detection might break
 BLACK_HIT_POINTS = 5
 BLUE_HIT_POINTS = 10
 RED_HIT_POINTS = 15
@@ -36,7 +39,7 @@ SHOT_OFFSET_Y = 28
 
 #the game's variables
 score = 0
-myfont = pygame.font.SysFont('Arial', 22)
+myfont = pygame.font.SysFont('ArialBold', 32)
 target_y = 200
 target_direction = 'down'
 archer_y = 170
@@ -92,7 +95,7 @@ def seeIfHitTarget():
     for index in range(len(arrows_x)):
         shot_x = arrows_x[index]
         shot_y = arrows_y[index]
-        if shot_x + ARROW_LENGTH == TARGET_X + 20: #then it got to where the target is
+        if shot_x + ARROW_LENGTH == TARGET_X + ARROW_LENGTH: #then it got to where the target is
             #see what the color is at that spot
             pixel_color = screen.get_at([shot_x + ARROW_LENGTH,shot_y])
             if pixel_color != pygame.color.THECOLORS['gray']: #it it something
@@ -136,6 +139,8 @@ def drawArrows():
         pygame.draw.rect(screen,pygame.color.THECOLORS['tan3'],(arrows_x[index],arrows_y[index],ARROW_LENGTH,2))
         pygame.draw.rect(screen,pygame.color.THECOLORS['gray'],(arrows_x[index]+ARROW_LENGTH,arrows_y[index]-1,4,4))
 
+# my_surface = gradient.vertical((100, 100), (102, 255, 255, 1), (0, 64, 255, 1))
+
 
 
 running = True
@@ -168,8 +173,8 @@ while running:
 
 
     #make the screen completely white
-    screen.fill(white)
-
+    screen.fill(blue)
+    # screen.blit(my_surface, (0, 0))
 
     #game logic
     moveArcher()
@@ -190,6 +195,7 @@ while running:
 
     #draw everything on the screen
     label = myfont.render("Score: " + str(score), 1, pygame.color.THECOLORS['black'])
+
     screen.blit(label, (280, 10))
     screen.blit(BACKGROUND_IMAGE, (0,0))
     drawArcher()
