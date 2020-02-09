@@ -1,9 +1,3 @@
-#IT SHOULD ALLOW FOR HOLDING OF THE MOUSE BUTTON TO COCK BACK THE BOW
-    #change to drawing_bow bool
-#IT SHOULD ALLOW FOR MULTIPLE ARROWS
-    #still have to remove them from the list when hit target or go off the screen
-
-
 import pygame, sys
 import gradient
 pygame.init()
@@ -11,38 +5,46 @@ screen = pygame.display.set_mode([640, 480])
 
 
 #constants
+#fonts
+myfont = pygame.font.SysFont('ArialBold', 32)
+#colors
 white=(255 ,255, 255)
 blue= (0, 170, 255)
-firstTime = True
+#scores
 BESTSCORE = 0
 highscores = open('highscores.txt', 'a+')
-TARGET_COLOR_HEIGHT = 20
-TARGET_X = 590
-TARGET_WIDTH = 20
-TARGET_SPEED = 6
-ARROW_SPEED = 20 #don't change, otherwise collision detection might break
-ARROW_LENGTH = 30 #don't change, otherwise collision detection might break
+#points
 BLACK_HIT_POINTS = 5
 BLUE_HIT_POINTS = 10
 RED_HIT_POINTS = 15
 YELLOW_HIT_POINTS = 30
-ARCHER_X = 10 #don't change, otherwise collision detection might break
+#positions
+TARGET_COLOR_HEIGHT = 20
+TARGET_WIDTH = 20
+TARGET_SPEED = 6
+ARROW_SPEED = 20
+ARROW_LENGTH = 20
+TARGET_X = 590
+ARCHER_X = 10
+SHOT_OFFSET_X = 20
+SHOT_OFFSET_Y = 28
+#images
 BACKGROUND_IMAGE = pygame.image.load("castle.png")
 ARCHER_STANDING = pygame.image.load("archer5.png")
 ARCHER_SHOOTING1 = pygame.image.load("archer1.png")
 ARCHER_SHOOTING2 = pygame.image.load("archer2.png")
 ARCHER_SHOOTING3 = pygame.image.load("archer3.png")
 ARCHER_SHOOTING4 = pygame.image.load("archer4.png")
-SHOT_OFFSET_X = 20 #don't change, otherwise collision detection might break
-SHOT_OFFSET_Y = 28
 
 
-#the game's variables
+
+#game logic
+playerLetter = "A"
 score = 0
-myfont = pygame.font.SysFont('ArialBold', 32)
 target_y = 200
 target_direction = 'down'
 archer_y = 170
+firstTime = True
 drawing_bow = False
 autoshoot = False
 arrows_x = []
@@ -79,7 +81,8 @@ def moveArrows():
 
 def writeHighScore():
     if score != 0:
-        highscores.write(str(score) + '\n')
+        finalStringScore = playerLetter + str(score)  + '\n'
+        highscores.write(finalStringScore)
 
 def readHighScores():
     global BESTSCORE
@@ -87,7 +90,9 @@ def readHighScores():
     file_lines=highscores_read.readlines()
     scores = []
     for line in file_lines:
-        scores.append(int(line))
+        letterRemoved = line[1:]
+        if line[0] == playerLetter:
+            scores.append(int(letterRemoved))
     BESTSCORE = max(scores)
 
 
@@ -99,6 +104,10 @@ def seeIfHitTarget():
         if shot_x + ARROW_LENGTH == TARGET_X + ARROW_LENGTH: #then it got to where the target is
             #see what the color is at that spot
             pixel_color = screen.get_at([shot_x + ARROW_LENGTH,shot_y])
+
+            # TEMPORARY FIX
+            score += 10
+
             if pixel_color == pygame.color.THECOLORS['gray']:
                 shooting = False
                 if pixel_color == pygame.color.THECOLORS['black']:
@@ -150,6 +159,7 @@ while running:
     if firstTime == True:
         readHighScores()
         print(str(BESTSCORE))
+
     for event in pygame.event.get():
         #check if you've exited the game
         if event.type == pygame.QUIT:
@@ -170,10 +180,6 @@ while running:
             else:
                 autoshoot = True
 
-
-
-
-    #make the screen completely white
     screen.fill(blue)
     # screen.blit(my_surface, (0, 0))
 
