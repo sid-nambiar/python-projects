@@ -5,6 +5,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/archery_game.py" beforeDir="false" afterPath="$PROJECT_DIR$/archery_game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/highscores.txt" beforeDir="false" afterPath="$PROJECT_DIR$/highscores.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/line_chart.svg" beforeDir="false" afterPath="$PROJECT_DIR$/line_chart.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pygal_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/pygal_example.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

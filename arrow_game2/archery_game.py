@@ -78,7 +78,8 @@ def moveArrows():
         arrows_x[index] += ARROW_SPEED
 
 def writeHighScore():
-    highscores.write(str(score) + '\n')
+    if score != 0:
+        highscores.write(str(score) + '\n')
 
 def readHighScores():
     global BESTSCORE
@@ -98,7 +99,7 @@ def seeIfHitTarget():
         if shot_x + ARROW_LENGTH == TARGET_X + ARROW_LENGTH: #then it got to where the target is
             #see what the color is at that spot
             pixel_color = screen.get_at([shot_x + ARROW_LENGTH,shot_y])
-            if pixel_color != pygame.color.THECOLORS['gray']: #it it something
+            if pixel_color == pygame.color.THECOLORS['gray']:
                 shooting = False
                 if pixel_color == pygame.color.THECOLORS['black']:
                     score += BLACK_HIT_POINTS
