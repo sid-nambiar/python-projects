@@ -1,5 +1,6 @@
 import pygame, sys
 import gradient
+import time
 pygame.init()
 screen = pygame.display.set_mode([640, 480])
 
@@ -18,7 +19,7 @@ BLACK_HIT_POINTS = 5
 BLUE_HIT_POINTS = 10
 RED_HIT_POINTS = 15
 YELLOW_HIT_POINTS = 30
-#positions
+#positions/cordnates
 TARGET_COLOR_HEIGHT = 20
 TARGET_WIDTH = 20
 TARGET_SPEED = 6
@@ -29,13 +30,14 @@ ARCHER_X = 10
 SHOT_OFFSET_X = 20
 SHOT_OFFSET_Y = 28
 #images
-BACKGROUND_IMAGE = pygame.image.load("castle.png")
+MENU_SCREEN_IMAGE = pygame.image.load("hallway.jpg")
+BACKGROUND_IMAGE = pygame.image.load("pixel-castle.png")
 ARCHER_STANDING = pygame.image.load("archer5.png")
 ARCHER_SHOOTING1 = pygame.image.load("archer1.png")
 ARCHER_SHOOTING2 = pygame.image.load("archer2.png")
 ARCHER_SHOOTING3 = pygame.image.load("archer3.png")
 ARCHER_SHOOTING4 = pygame.image.load("archer4.png")
-
+archer_image = 0
 
 
 #game logic
@@ -44,26 +46,39 @@ score = 0
 target_y = 200
 target_direction = 'down'
 archer_y = 170
+menu_screen_toggled = True
 firstTime = True
 drawing_bow = False
 autoshoot = False
 arrows_x = []
 arrows_y = []
 
-
-#draw the side view of a target that goes black, blue, red, yellow (outside to inside)
-#should use the target_y as the top of the target
-#make it 3d by drawing ellipses inside each other
+#drawing the target
 def drawTarget():
     pygame.draw.ellipse(screen,pygame.color.THECOLORS['black'],(TARGET_X,target_y,40,70))
     pygame.draw.ellipse(screen,pygame.color.THECOLORS['blue'],(TARGET_X+6,target_y+10,28,50))
     pygame.draw.ellipse(screen,pygame.color.THECOLORS['red'],(TARGET_X+11,target_y+20,18,30))
     pygame.draw.ellipse(screen,pygame.color.THECOLORS['yellow'],(TARGET_X+16,target_y+29,8,13))
 
+def getPlayerButtonColor():
+    global playerLetter
+    pixelColor = screen.get_at(pygame.mouse.get_pos())
+    if pixelColor == pygame.color.THECOLORS['blue']:
+        playerLetter = "B"
+        return True
+    elif pixelColor == pygame.color.THECOLORS['red']:
+        playerLetter = "A"
+        return True
+    else:
+        return False
 
+#drawing player buttons
+def drawMenuButtons():
+    pygame.draw.ellipse(screen,pygame.color.THECOLORS['red'],(0, 390, 90, 90))
+    pygame.draw.ellipse(screen, pygame.color.THECOLORS['blue'], (550, 390, 90, 90))
 
 def moveTarget():
-    global target_direction, target_y #need to do this if we want to change a global variable in a function
+    global target_direction, target_y
     if target_direction == 'down':
         target_y += TARGET_SPEED
     else:
@@ -72,7 +87,7 @@ def moveTarget():
     #check if it should change directions
     if target_y <= 0:
         target_direction = 'down'
-    elif target_y >= 410: #screen height (480) minus target height (70)
+    elif target_y >= 410: #screen height
         target_direction = 'up'
 
 def moveArrows():
@@ -83,6 +98,7 @@ def writeHighScore():
     if score != 0:
         finalStringScore = playerLetter + str(score)  + '\n'
         highscores.write(finalStringScore)
+        print("player letter: ", playerLetter)
 
 def readHighScores():
     global BESTSCORE
@@ -101,7 +117,7 @@ def seeIfHitTarget():
     for index in range(len(arrows_x)):
         shot_x = arrows_x[index]
         shot_y = arrows_y[index]
-        if shot_x + ARROW_LENGTH == TARGET_X + ARROW_LENGTH: #then it got to where the target is
+        if shot_x + ARROW_LENGTH == TARGET_X + ARROW_LENGTH:
             #see what the color is at that spot
             pixel_color = screen.get_at([shot_x + ARROW_LENGTH,shot_y])
 
@@ -140,8 +156,8 @@ def drawArcher():
 
 def moveArcher():
     global archer_y
-    archer_y = pygame.mouse.get_pos()[1] #returns the (x,y) of the mouse position so we want the 1 spot
-    if archer_y > 420: #don't let the archer go off the bottom of the screen
+    archer_y = pygame.mouse.get_pos()[1] #returns the (x,y) of the mouse
+    if archer_y > 420: #restricts player going off the screen
         archer_y = 420
 
 def drawArrows():
@@ -149,71 +165,82 @@ def drawArrows():
         pygame.draw.rect(screen,pygame.color.THECOLORS['tan3'],(arrows_x[index],arrows_y[index],ARROW_LENGTH,2))
         pygame.draw.rect(screen,pygame.color.THECOLORS['gray'],(arrows_x[index]+ARROW_LENGTH,arrows_y[index]-1,4,4))
 
-# my_surface = gradient.vertical((100, 100), (102, 255, 255, 1), (0, 64, 255, 1))
 
 
 
 running = True
 #game loop
 while running:
-    if firstTime == True:
-        readHighScores()
-        print(str(BESTSCORE))
+    #finds out if menu screen is toggled
+    if menu_screen_toggled == True:
+        screen.blit(MENU_SCREEN_IMAGE, (0, 0))
+        drawMenuButtons()
+        for event in pygame.event.get():
+            #check if you've exited the game
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if getPlayerButtonColor() == True:
+                    menu_screen_toggled = False
 
-    for event in pygame.event.get():
-        #check if you've exited the game
-        if event.type == pygame.QUIT:
-            running = False
-            writeHighScore()
+    # if the user has clicked one of the buttons then start game
+    else:
+        if firstTime == True:
+            readHighScores()
+            print(str(BESTSCORE))
 
-        #check if you clicked
-        if event.type == pygame.MOUSEBUTTONDOWN and drawing_bow == False:
-            drawing_bow = True
-            archer_image = 0
+        for event in pygame.event.get():
+            #check if you've exited the game
+            if event.type == pygame.QUIT:
+                running = False
+                writeHighScore()
 
-        if event.type == pygame.MOUSEBUTTONUP:
-            #has to wait until fully drawn back
-            if archer_image >= 10:
+            #check if you clicked
+            if event.type == pygame.MOUSEBUTTONDOWN and drawing_bow == False:
+                drawing_bow = True
+                archer_image = 0
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                #
+                if archer_image >= 10:
+                    drawing_bow = False
+                    arrows_x.append(ARCHER_X + SHOT_OFFSET_X)
+                    arrows_y.append(archer_y + SHOT_OFFSET_Y)
+                else:
+                    autoshoot = True
+
+        screen.blit(BACKGROUND_IMAGE, (0,0))
+
+        #game logic
+        moveArcher()
+        moveTarget()
+        moveArrows()
+
+        #have to cycle through the images before allowing the firing the arrow
+        if drawing_bow == True:
+            archer_image += 1 #this variable is used by the drawArcher function
+            if archer_image >= 10 and autoshoot == True:
                 drawing_bow = False
                 arrows_x.append(ARCHER_X + SHOT_OFFSET_X)
                 arrows_y.append(archer_y + SHOT_OFFSET_Y)
-            else:
-                autoshoot = True
-
-    screen.fill(blue)
-    # screen.blit(my_surface, (0, 0))
-
-    #game logic
-    moveArcher()
-
-    moveTarget()
-
-    moveArrows()
-
-    #have to cycle through the images before allowing the firing the arrow
-    if drawing_bow == True:
-        archer_image += 1 #this variable is used by the drawArcher function
-        if archer_image >= 10 and autoshoot == True:
-            drawing_bow = False
-            arrows_x.append(ARCHER_X + SHOT_OFFSET_X)
-            arrows_y.append(archer_y + SHOT_OFFSET_Y)
-            autoshoot = False
+                autoshoot = False
 
 
-    #draw everything on the screen
-    label = myfont.render("Score: " + str(score), 1, pygame.color.THECOLORS['black'])
+        #draw
+        label = myfont.render("Score: " + str(score), 1, pygame.color.THECOLORS['black'])
 
-    screen.blit(label, (280, 10))
-    screen.blit(BACKGROUND_IMAGE, (0,0))
-    drawArcher()
-    drawArrows()
-    drawTarget() #want to draw on top of shot
-    #update the entire display
+        screen.blit(label, (280, 10))
+
+        drawArcher()
+        drawArrows()
+        drawTarget()
+
+        #handle collisions after updating dispay
+        seeIfHitTarget()
+        firstTime= False
+
+    #update the display
     pygame.display.update()
-
-    #handle collisions after updating displacy
-    seeIfHitTarget()
-    firstTime= False
 
 
 pygame.quit()
