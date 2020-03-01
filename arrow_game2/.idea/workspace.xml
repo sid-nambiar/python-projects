@@ -3,11 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0cb1209f-b11d-423d-83b7-957fa0d4242e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/archer1.png" beforeDir="false" afterPath="$PROJECT_DIR$/archer1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/archer2.png" beforeDir="false" afterPath="$PROJECT_DIR$/archer2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/archer3.png" beforeDir="false" afterPath="$PROJECT_DIR$/archer3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/archer4.png" beforeDir="false" afterPath="$PROJECT_DIR$/archer4.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/archer5.png" beforeDir="false" afterPath="$PROJECT_DIR$/archer5.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/archery_game.py" beforeDir="false" afterPath="$PROJECT_DIR$/archery_game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/highscores.txt" beforeDir="false" afterPath="$PROJECT_DIR$/highscores.txt" afterDir="false" />
     </list>

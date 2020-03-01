@@ -9,6 +9,7 @@ screen = pygame.display.set_mode([640, 480])
 #fonts
 myfont = pygame.font.SysFont('ArialBold', 32)
 #colors
+highscoreColorRed = True
 white=(255 ,255, 255)
 blue= (0, 170, 255)
 #scores
@@ -22,13 +23,15 @@ YELLOW_HIT_POINTS = 30
 #positions/cordnates
 TARGET_COLOR_HEIGHT = 20
 TARGET_WIDTH = 20
+TARGET_SIZE = 68
 TARGET_SPEED = 6
 ARROW_SPEED = 20
-ARROW_LENGTH = 20
+ARROW_LENGTH = 30
 TARGET_X = 590
 ARCHER_X = 10
 SHOT_OFFSET_X = 20
 SHOT_OFFSET_Y = 28
+ARROW_HEIGHT = 5
 #images
 MENU_SCREEN_IMAGE = pygame.image.load("hallway.jpg")
 BACKGROUND_IMAGE = pygame.image.load("pixel-castle.png")
@@ -98,7 +101,6 @@ def writeHighScore():
     if score != 0:
         finalStringScore = playerLetter + str(score)  + '\n'
         highscores.write(finalStringScore)
-        print("player letter: ", playerLetter)
 
 def readHighScores():
     global BESTSCORE
@@ -111,32 +113,25 @@ def readHighScores():
             scores.append(int(letterRemoved))
     BESTSCORE = max(scores)
 
-
 def seeIfHitTarget():
     global score
+    target_center_y = target_y + TARGET_SIZE / 2
+
     for index in range(len(arrows_x)):
         shot_x = arrows_x[index]
         shot_y = arrows_y[index]
         if shot_x + ARROW_LENGTH == TARGET_X + ARROW_LENGTH:
-            #see what the color is at that spot
-            pixel_color = screen.get_at([shot_x + ARROW_LENGTH,shot_y])
-
-            # TEMPORARY FIX
-            score += 10
-
-            if pixel_color == pygame.color.THECOLORS['gray']:
-                shooting = False
-                if pixel_color == pygame.color.THECOLORS['black']:
-                    score += BLACK_HIT_POINTS
-
-                elif pixel_color == pygame.color.THECOLORS['blue']:
-                    score += BLUE_HIT_POINTS
-
-                elif pixel_color == pygame.color.THECOLORS['red']:
-                    score += RED_HIT_POINTS
-
-                elif pixel_color == pygame.color.THECOLORS['yellow']:
-                    score += YELLOW_HIT_POINTS
+            diff = abs(target_center_y - shot_y)
+            if 0 <= diff <= 4:
+                score += YELLOW_HIT_POINTS
+            elif 4 <= diff <= 13:
+                score += RED_HIT_POINTS
+            elif 13 <= diff <= 23:
+                score += BLUE_HIT_POINTS
+            elif 23 <= diff <= 34:
+                score += BLACK_HIT_POINTS
+            else:
+                score += 0  # Did not hit target
 
 
 def drawArcher():
@@ -162,7 +157,7 @@ def moveArcher():
 
 def drawArrows():
     for index in range(len(arrows_x)):
-        pygame.draw.rect(screen,pygame.color.THECOLORS['tan3'],(arrows_x[index],arrows_y[index],ARROW_LENGTH,2))
+        pygame.draw.rect(screen,pygame.color.THECOLORS['tan3'],(arrows_x[index],arrows_y[index],ARROW_LENGTH,ARROW_HEIGHT))
         pygame.draw.rect(screen,pygame.color.THECOLORS['gray'],(arrows_x[index]+ARROW_LENGTH,arrows_y[index]-1,4,4))
 
 
@@ -175,6 +170,15 @@ while running:
     if menu_screen_toggled == True:
         screen.blit(MENU_SCREEN_IMAGE, (0, 0))
         drawMenuButtons()
+        buttonLabel = myfont.render('player A', 1, pygame.color.THECOLORS['white'])
+        screen.blit(buttonLabel, (0, 425))
+
+        buttonLabel2 = myfont.render('player B', 1, pygame.color.THECOLORS['white'])
+        screen.blit(buttonLabel2, (552, 425))
+
+        MenuScreenText = myfont.render("Welcome To Archery Game!", 1, pygame.color.THECOLORS['white'])
+        screen.blit(MenuScreenText, (320,180))
+
         for event in pygame.event.get():
             #check if you've exited the game
             if event.type == pygame.QUIT:
@@ -187,7 +191,6 @@ while running:
     else:
         if firstTime == True:
             readHighScores()
-            print(str(BESTSCORE))
 
         for event in pygame.event.get():
             #check if you've exited the game
@@ -225,12 +228,15 @@ while running:
                 arrows_y.append(archer_y + SHOT_OFFSET_Y)
                 autoshoot = False
 
+        #drawing components
+        highestScore = myfont.render('Best overall score: ' + str(BESTSCORE),1, pygame.color.THECOLORS['black'])
+        label = myfont.render("Score: " + str(score),1, pygame.color.THECOLORS['black'])
+        highScoreLabel= myfont.render(str(playerLetter)+"'s "+'highscore: ' + str(BESTSCORE), 1, pygame.color.THECOLORS['black'])
 
-        #draw
-        label = myfont.render("Score: " + str(score), 1, pygame.color.THECOLORS['black'])
 
-        screen.blit(label, (280, 10))
-
+        screen.blit(label, (180, 10))
+        screen.blit(highScoreLabel, (300, 10))
+        screen.blit(highestScore,(180,450))
         drawArcher()
         drawArrows()
         drawTarget()
