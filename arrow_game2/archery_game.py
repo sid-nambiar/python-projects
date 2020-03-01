@@ -14,6 +14,7 @@ white=(255 ,255, 255)
 blue= (0, 170, 255)
 #scores
 BESTSCORE = 0
+BEST_OVERALL_SCORE = 0
 highscores = open('highscores.txt', 'a+')
 #points
 BLACK_HIT_POINTS = 5
@@ -56,12 +57,18 @@ autoshoot = False
 arrows_x = []
 arrows_y = []
 
-#drawing the target
-def drawTarget():
-    pygame.draw.ellipse(screen,pygame.color.THECOLORS['black'],(TARGET_X,target_y,40,70))
-    pygame.draw.ellipse(screen,pygame.color.THECOLORS['blue'],(TARGET_X+6,target_y+10,28,50))
-    pygame.draw.ellipse(screen,pygame.color.THECOLORS['red'],(TARGET_X+11,target_y+20,18,30))
-    pygame.draw.ellipse(screen,pygame.color.THECOLORS['yellow'],(TARGET_X+16,target_y+29,8,13))
+#Menu screen functions
+def drawMenuScreenUI():
+    screen.blit(MENU_SCREEN_IMAGE, (0, 0))
+    drawMenuButtons()
+    buttonLabel = myfont.render('player A', 1, pygame.color.THECOLORS['white'])
+    screen.blit(buttonLabel, (0, 425))
+
+    buttonLabel2 = myfont.render('player B', 1, pygame.color.THECOLORS['white'])
+    screen.blit(buttonLabel2, (552, 425))
+
+    MenuScreenText = myfont.render("Welcome To Archery Game!", 1, pygame.color.THECOLORS['white'])
+    screen.blit(MenuScreenText, (320, 180))
 
 def getPlayerButtonColor():
     global playerLetter
@@ -79,6 +86,14 @@ def getPlayerButtonColor():
 def drawMenuButtons():
     pygame.draw.ellipse(screen,pygame.color.THECOLORS['red'],(0, 390, 90, 90))
     pygame.draw.ellipse(screen, pygame.color.THECOLORS['blue'], (550, 390, 90, 90))
+
+
+#drawing the target
+def drawTarget():
+    pygame.draw.ellipse(screen,pygame.color.THECOLORS['black'],(TARGET_X,target_y,40,70))
+    pygame.draw.ellipse(screen,pygame.color.THECOLORS['blue'],(TARGET_X+6,target_y+10,28,50))
+    pygame.draw.ellipse(screen,pygame.color.THECOLORS['red'],(TARGET_X+11,target_y+20,18,30))
+    pygame.draw.ellipse(screen,pygame.color.THECOLORS['yellow'],(TARGET_X+16,target_y+29,8,13))
 
 def moveTarget():
     global target_direction, target_y
@@ -103,14 +118,17 @@ def writeHighScore():
         highscores.write(finalStringScore)
 
 def readHighScores():
-    global BESTSCORE
+    global BESTSCORE, BEST_OVERALL_SCORE
     highscores_read = open('highscores.txt', 'r')
     file_lines=highscores_read.readlines()
     scores = []
+    all_scores = []
     for line in file_lines:
         letterRemoved = line[1:]
+        all_scores.append(int(letterRemoved))
         if line[0] == playerLetter:
             scores.append(int(letterRemoved))
+    BEST_OVERALL_SCORE = max(all_scores)
     BESTSCORE = max(scores)
 
 def seeIfHitTarget():
@@ -161,23 +179,12 @@ def drawArrows():
         pygame.draw.rect(screen,pygame.color.THECOLORS['gray'],(arrows_x[index]+ARROW_LENGTH,arrows_y[index]-1,4,4))
 
 
-
-
 running = True
 #game loop
 while running:
     #finds out if menu screen is toggled
     if menu_screen_toggled == True:
-        screen.blit(MENU_SCREEN_IMAGE, (0, 0))
-        drawMenuButtons()
-        buttonLabel = myfont.render('player A', 1, pygame.color.THECOLORS['white'])
-        screen.blit(buttonLabel, (0, 425))
-
-        buttonLabel2 = myfont.render('player B', 1, pygame.color.THECOLORS['white'])
-        screen.blit(buttonLabel2, (552, 425))
-
-        MenuScreenText = myfont.render("Welcome To Archery Game!", 1, pygame.color.THECOLORS['white'])
-        screen.blit(MenuScreenText, (320,180))
+        drawMenuScreenUI()
 
         for event in pygame.event.get():
             #check if you've exited the game
@@ -229,7 +236,7 @@ while running:
                 autoshoot = False
 
         #drawing components
-        highestScore = myfont.render('Best overall score: ' + str(BESTSCORE),1, pygame.color.THECOLORS['black'])
+        highestScore = myfont.render('Best overall score: ' + str(BEST_OVERALL_SCORE),1, pygame.color.THECOLORS['black'])
         label = myfont.render("Score: " + str(score),1, pygame.color.THECOLORS['black'])
         highScoreLabel= myfont.render(str(playerLetter)+"'s "+'highscore: ' + str(BESTSCORE), 1, pygame.color.THECOLORS['black'])
 
