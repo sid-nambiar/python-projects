@@ -1,6 +1,11 @@
+
+#important note! turn volume down
+
+
 import pygame, sys
 import gradient
 import time
+import scoreChart
 pygame.init()
 screen = pygame.display.set_mode([640, 480])
 
@@ -57,6 +62,12 @@ autoshoot = False
 arrows_x = []
 arrows_y = []
 
+
+def playSound():
+    soundObj = pygame.mixer.Sound('music2.wav')
+    soundObj.play()
+
+
 #Menu screen functions
 def drawMenuScreenUI():
     screen.blit(MENU_SCREEN_IMAGE, (0, 0))
@@ -67,8 +78,11 @@ def drawMenuScreenUI():
     buttonLabel2 = myfont.render('player B', 1, pygame.color.THECOLORS['white'])
     screen.blit(buttonLabel2, (552, 425))
 
-    MenuScreenText = myfont.render("Welcome To Archery Game!", 1, pygame.color.THECOLORS['white'])
-    screen.blit(MenuScreenText, (320, 180))
+    MenuScreenText = myfont.render("Welcome To ", 1, pygame.color.THECOLORS['white'])
+    screen.blit(MenuScreenText, (240, 180))
+
+    MenuScreenText2 = myfont.render("Archery Game!", 1, pygame.color.THECOLORS["white"])
+    screen.blit(MenuScreenText2,(240, 240))
 
 def getPlayerButtonColor():
     global playerLetter
@@ -178,12 +192,17 @@ def drawArrows():
         pygame.draw.rect(screen,pygame.color.THECOLORS['tan3'],(arrows_x[index],arrows_y[index],ARROW_LENGTH,ARROW_HEIGHT))
         pygame.draw.rect(screen,pygame.color.THECOLORS['gray'],(arrows_x[index]+ARROW_LENGTH,arrows_y[index]-1,4,4))
 
-
+play_sound = True
 running = True
 #game loop
 while running:
     #finds out if menu screen is toggled
     if menu_screen_toggled == True:
+        
+       '''if play_sound == True:
+            playSound()
+            play_sound = False'''
+
         drawMenuScreenUI()
 
         for event in pygame.event.get():
