@@ -36,8 +36,8 @@ SHOT_OFFSET_X = 20
 SHOT_OFFSET_Y = 28
 ARROW_HEIGHT = 5
 #images
-SCORE_CHART_IMAGE = pygame.image.load("line_chart.png")
-SCORE_CHART_IMAGE= pygame.transform.scale(SCORE_CHART_IMAGE,(640, 480))
+SCORE_CHART_IMAGE = pygame.image.load("resized_line_chart.png")
+# SCORE_CHART_IMAGE= pygame.transform.scale(SCORE_CHART_IMAGE,(640, 480))
 MENU_SCREEN_IMAGE = pygame.image.load("hallway.jpg")
 BACKGROUND_IMAGE = pygame.image.load("pixel-castle.png")
 ARCHER_STANDING = pygame.image.load("archer5.png")
@@ -63,9 +63,12 @@ arrows_y = []
 
 
 def playSound():
-    soundObj = pygame.mixer.Sound('music2.wav')
+    soundObj = pygame.mixer.Sound('swoosh.wav')
     soundObj.play()
-
+def soundDelay():
+    for arrowX in arrows_x:
+        if arrowX > 105 and arrowX < 115:
+            playSound()
 
 #Menu screen functions
 def drawMenuScreenUI():
@@ -192,9 +195,19 @@ def moveArcher():
         archer_y = 420
 
 def drawArrows():
+    global arrows_x, arrows_y
+    newArrowsX = []
+    newArrowsY = []
+
     for index in range(len(arrows_x)):
         pygame.draw.rect(screen,pygame.color.THECOLORS['tan3'],(arrows_x[index],arrows_y[index],ARROW_LENGTH,ARROW_HEIGHT))
         pygame.draw.rect(screen,pygame.color.THECOLORS['gray'],(arrows_x[index]+ARROW_LENGTH,arrows_y[index]-1,4,4))
+        if arrows_x[index] < 640:
+            newArrowsX.append(arrows_x[index])
+            newArrowsY.append(arrows_y[index])
+    arrows_x = newArrowsX
+    arrows_y = newArrowsY
+
 
 chart_showing = True
 play_sound = True
@@ -235,7 +248,6 @@ while running:
                 archer_image = 0
 
             if event.type == pygame.MOUSEBUTTONUP:
-                #
                 if archer_image >= 10:
                     drawing_bow = False
                     arrows_x.append(ARCHER_X + SHOT_OFFSET_X)
@@ -249,6 +261,8 @@ while running:
         moveArcher()
         moveTarget()
         moveArrows()
+        soundDelay()
+
 
         #have to cycle through the images before allowing the firing the arrow
         if drawing_bow == True:

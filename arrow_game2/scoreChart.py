@@ -72,5 +72,7 @@ drawing.width, drawing.height = drawing.minWidth() * sx, drawing.height * sy
 drawing.scale(sx, sy)
 
 renderPM.drawToFile(drawing, "line_chart.png", fmt="PNG")
-#img = Image.open("line_chart.png")
+img = Image.open("line_chart.png")
+img = img.resize((640, 480))
+img.save("resized_line_chart.png")
 #img.show()
