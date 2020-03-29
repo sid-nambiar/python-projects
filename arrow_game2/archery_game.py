@@ -1,7 +1,4 @@
 
-#important note! turn volume down
-
-
 import pygame, sys
 import gradient
 import time
@@ -39,6 +36,8 @@ SHOT_OFFSET_X = 20
 SHOT_OFFSET_Y = 28
 ARROW_HEIGHT = 5
 #images
+SCORE_CHART_IMAGE = pygame.image.load("line_chart.png")
+SCORE_CHART_IMAGE= pygame.transform.scale(SCORE_CHART_IMAGE,(640, 480))
 MENU_SCREEN_IMAGE = pygame.image.load("hallway.jpg")
 BACKGROUND_IMAGE = pygame.image.load("pixel-castle.png")
 ARCHER_STANDING = pygame.image.load("archer5.png")
@@ -96,11 +95,16 @@ def getPlayerButtonColor():
     else:
         return False
 
+
 #drawing player buttons
 def drawMenuButtons():
     pygame.draw.ellipse(screen,pygame.color.THECOLORS['red'],(0, 390, 90, 90))
     pygame.draw.ellipse(screen, pygame.color.THECOLORS['blue'], (550, 390, 90, 90))
 
+def drawScoreChart():
+    screen.blit(SCORE_CHART_IMAGE, (0, 0))
+    scoreChartInstructions = myfont.render('click to continue',1, pygame.color.THECOLORS['white'])
+    screen.blit(scoreChartInstructions, (10,0))
 
 #drawing the target
 def drawTarget():
@@ -192,25 +196,26 @@ def drawArrows():
         pygame.draw.rect(screen,pygame.color.THECOLORS['tan3'],(arrows_x[index],arrows_y[index],ARROW_LENGTH,ARROW_HEIGHT))
         pygame.draw.rect(screen,pygame.color.THECOLORS['gray'],(arrows_x[index]+ARROW_LENGTH,arrows_y[index]-1,4,4))
 
+chart_showing = True
 play_sound = True
 running = True
 #game loop
 while running:
     #finds out if menu screen is toggled
     if menu_screen_toggled == True:
-        
-       '''if play_sound == True:
-            playSound()
-            play_sound = False'''
-
         drawMenuScreenUI()
+
+        if chart_showing == True:
+            drawScoreChart()
 
         for event in pygame.event.get():
             #check if you've exited the game
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if getPlayerButtonColor() == True:
+                if chart_showing == True:
+                    chart_showing = False
+                elif getPlayerButtonColor() == True:
                     menu_screen_toggled = False
 
     # if the user has clicked one of the buttons then start game

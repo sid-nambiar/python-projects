@@ -1,6 +1,11 @@
 import pygal
 import numpy as np
+
 from pygal.style import Style, DarkColorizedStyle
+
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPDF, renderPM
+from PIL import Image
 
 import subprocess
 
@@ -58,3 +63,14 @@ line_chart.add('player B', Blevels)
 #rendering chart
 line_chart.render()
 line_chart.render_to_file('line_chart.svg')
+
+drawing = svg2rlg("line_chart.svg")
+
+#improving resolution
+sx = sy = 10
+drawing.width, drawing.height = drawing.minWidth() * sx, drawing.height * sy
+drawing.scale(sx, sy)
+
+renderPM.drawToFile(drawing, "line_chart.png", fmt="PNG")
+#img = Image.open("line_chart.png")
+#img.show()
