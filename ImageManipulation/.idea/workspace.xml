@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c89bf9b9-1ed5-4039-ba03-f17e2193e59b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/arrow_game2/highscores.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/arrow_game2/archery_game.py" beforeDir="false" afterPath="$PROJECT_DIR$/arrow_game2/archery_game.py" afterDir="false" />
-    </list>
+    <list default="true" id="cd88e2b4-27df-4a8d-b6fe-852134747a86" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
-  <component name="ProjectId" id="1WcnI5v7f69Tqii8OOMlBkUDfbv" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1ZoU21OkgUr9WST6mhkr00ytaqx" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../arrow_game2" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -35,11 +40,11 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="c89bf9b9-1ed5-4039-ba03-f17e2193e59b" name="Default Changelist" comment="" />
-      <created>1579457667033</created>
+      <changelist id="cd88e2b4-27df-4a8d-b6fe-852134747a86" name="Default Changelist" comment="" />
+      <created>1585504729272</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1579457667033</updated>
+      <updated>1585504729272</updated>
     </task>
     <servers />
   </component>
