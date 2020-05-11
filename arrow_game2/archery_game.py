@@ -14,6 +14,8 @@ myfont = pygame.font.SysFont('ArialBold', 32)
 highscoreColorRed = True
 white=(255 ,255, 255)
 blue= (0, 170, 255)
+#fps
+FPS = 1
 #scores
 BESTSCORE = 0
 BEST_OVERALL_SCORE = 0
