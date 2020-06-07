@@ -2,14 +2,16 @@ import pygame, sys
 import filters
 
 pygame.init()
-screen = pygame.display.set_mode([1000, 600])
+screen = pygame.display.set_mode([1000, 700])
 #bools
 dragging = False
 #constants
 buttons=[]
-titles=["Black & White","Blur","Invert","Sharpen","Edge Detection","Sepia"]
+sliders=[]
+titles=["Black & White","Blur","Invert","Sharpen","Edge Detection","Sepia","Reset"]
+sliderTitles=["Saturation", "Brightness"]
 #fonts
-myfont = pygame.font.SysFont('ArialBold', 32)
+myfont = pygame.font.SysFont('ArialBold', 24)
 #colors
 white=(255 ,255, 255)
 
@@ -26,39 +28,43 @@ class Button:
         self.y = y
         self.w = 160
         self.h = 47
-    title = "Black & White"
-    w = 160
-    h = 47
-    x = 820
-    y = 100
 
 class Slider:
-    x = 500
-    y = 300
-    Ex = 562.5
-    Ey = 287.5
-    lineHeight = 5
-    lineWidth = 150
-    ellipseHeight = 25
-    ellipseWidth = 25
-slider = Slider()
+    def __init__(self, x, y, title):
+        self.title=title
+        self.x = x
+        self.y = y
 
+        self.lineWidth = 150
+        self.lineHeight = 5
+        self.ellipseHeight = 25
+        self.ellipseWidth = 25
+
+        self.middleX = self.x + self.lineWidth /2 - self.ellipseWidth/2
+        self.middleY = self.y + self.lineHeight / 2 - self.ellipseHeight / 2
+
+        self.Ex = self.middleX
+        self.Ey = self.middleY
+
+for i in range(2):
+    slider = Slider(75+i * 200,650,sliderTitles[i])
+    sliders.append(slider)
 
 #buttons
-for i in range(6):
+for i in range(7):
     button = Button(820,100+i * 75,titles[i])
     buttons.append(button)
 
 #Menu screen functions
 def drawUI():
-
-    pygame.draw.rect(screen, (0, 0, 0), (slider.x,slider.y,slider.lineWidth,slider.lineHeight), 0)
-    pygame.draw.ellipse(screen,(0,0,100),(slider.Ex, slider.Ey, slider.ellipseHeight,slider.ellipseWidth),0)
+    for slider in sliders:
+        pygame.draw.rect(screen, (0, 0, 0), (slider.x, slider.y, slider.lineWidth, slider.lineHeight), 0)
+        pygame.draw.ellipse(screen, (0, 0, 100), (slider.Ex, slider.Ey, slider.ellipseHeight, slider.ellipseWidth), 0)
 
     for button in buttons:
         screen.blit(BUTTON_IMG, (button.x,button.y))
         buttonLabel = myfont.render(button.title, 1, pygame.color.THECOLORS['black'])
-        screen.blit(buttonLabel, (button.x, button.y))
+        screen.blit(buttonLabel, (button.x+10, button.y+12))
 
 def pointInRect(pt_x, pt_y, rect_x, rect_y, rect_w, rect_h):
     if (pt_x > rect_x) and (pt_x < rect_x + rect_w) and (pt_y > rect_y) and (pt_y < rect_y + rect_h):
@@ -91,18 +97,39 @@ def checkButtons():
                 IMAGE_CURRENT = pygame.image.load(sharpPhoto)
                 filters.sharpness += 2.5
             elif button.title == "Sepia":
-                bluePhoto = filters.diySepia(FILENAME)
-                IMAGE_CURRENT = pygame.image.load(bluePhoto)
+                sepiaPhoto = filters.diySepia(FILENAME)
+                IMAGE_CURRENT = pygame.image.load(sepiaPhoto)
+            elif button.title == "Reset":
+                IMAGE_CURRENT = IMAGE_ORIGINAL
 
+def changeSaturationLevel(mouse_x,slider):
+    #left = -
+    #right = +
+    global IMAGE_CURRENT
 
+    diff = mouse_x-slider.middleX
+    print(diff)
+
+    if diff > 0:
+        half=slider.lineWidth/2
+        distPercent=diff/half
+        newSaturationLevel = distPercent*10
+        filters.saturationLevel =  newSaturationLevel
+    elif diff < 0:
+        filters.saturationLevel = 0.5
+
+    saturatedPhoto = filters.saturation(FILENAME)
+    IMAGE_CURRENT = pygame.image.load(saturatedPhoto)
 
 def checkSlider(mouse_x, mouse_y):
-    #x = pygame.mouse.get_pos()[0]
-    #y = pygame.mouse.get_pos()[1]
-    if pointInRect(mouse_x, mouse_y, slider.x, slider.y,slider.lineWidth, slider.ellipseHeight):
-        print("slider clicked!")
-        print(mouse_x)
-        slider.Ex = mouse_x
+    for slider in sliders:
+        if pointInRect(mouse_x, mouse_y, slider.x, slider.y,slider.lineWidth, slider.ellipseHeight):
+            slider.Ex = mouse_x
+            if slider.title =="Saturation":
+                changeSaturationLevel(mouse_x, slider)
+            elif slider.title ==  "Brightness":
+                pass
+
 
 
 running = True
@@ -132,8 +159,8 @@ while running:
     #drawing components
     drawUI()
 
-    label = myfont.render("Welcome!", 1, pygame.color.THECOLORS['black'])
-    screen.blit(label, (180, 10))
+    #label = myfont.render("Welcome!", 1, pygame.color.THECOLORS['black'])
+    #screen.blit(label, (180, 10))
 
     #update the display
     pygame.display.update()
