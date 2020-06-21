@@ -3,7 +3,12 @@ import PIL.ImageOps
 
 blurRadius = 2.5
 sharpness= 10
-saturationLevel = 2
+saturationLevel = 1
+brightnessLevel = 1
+
+angle = 0
+
+
 
 def diySepia(filename):
     new_name = "sepia.png"
@@ -19,6 +24,16 @@ def diySepia(filename):
             pixels[x,y] =(newRed,newGreen, newBlue)
     img.save(new_name)
     return new_name
+
+def brightness(filename):
+    new_name = "bright.png"
+    img = Image.open(filename)
+    converter = PIL.ImageEnhance.Brightness(img)
+    img2 = converter.enhance(brightnessLevel)
+    img2.save(new_name)
+    return new_name
+
+
 
 def saturation(filename):
     new_name = "saturated.png"
@@ -56,9 +71,20 @@ def findEdge(filename):
     return new_name
 
 def blackAndWhite(filename):
+    #new_name = "blackAndWhite.png"
+    #img = Image.open(filename)
+    #img = img.convert('LA')
+    #img.save(new_name)
+    #return new_name
     new_name = "blackAndWhite.png"
     img = Image.open(filename)
-    img = img.convert('LA')
+    width, height = img.size
+    pixels = img.load()
+    for y in range(height):
+        for x in range(width):
+            r, g, b = img.getpixel((x, y))
+            newImg= int((r+g+b)/3)
+            pixels[x, y] = (newImg, newImg, newImg)
     img.save(new_name)
     return new_name
 
@@ -77,10 +103,16 @@ def blur(filename):
     img.save(new_name)
     return new_name
 
+def rotation(filename):
+    new_name = "rotated.png"
+    img = Image.open(filename)
+    img2 = img.rotate(angle)
+    img2.save(new_name)
+    return new_name
+
 def exampleFilters(filename):
     img = Image.open("dogs.jpg")
     width, height = img.size
-
     img0 = img.convert('LA')
     img1 = img.rotate(180)
     img = img.filter(ImageFilter.BLUR)
