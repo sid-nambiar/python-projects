@@ -108,6 +108,12 @@ def rotation(filename):
     img2.save(new_name)
     return new_name
 
+def flip(filename):
+    new_name = "mirrored.png"
+    img = Image.open(filename)
+    img = PIL.ImageOps.mirror(img)
+    img.save(new_name)
+
 def exampleFilters(filename):
     img = Image.open("dogs.jpg")
     width, height = img.size

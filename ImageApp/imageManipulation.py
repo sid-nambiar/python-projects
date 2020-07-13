@@ -19,15 +19,13 @@ dragging = False
 buttons=[]
 sliders=[]
 arrows=[]
-arrowTitles=["rot L", "rot R","flip L", "flip R"]
+arrowTitles=["rot L", "rot R","flip"]
 titles=["Black & White","Blur","Invert","Sharpen","Edge Detection","Sepia","Reset", "New Image"]
 sliderTitles=["Saturation", "Brightness"]
 #fonts
 myfont = pygame.font.SysFont('ArialBold', 24)
 #colors
 white=(255 ,255, 255)
-
-#image
 
 FILENAME = "dog.png"
 
@@ -42,7 +40,8 @@ BUTTON_IMG = pygame.image.load("button.png")
 IMAGE_CURRENT = IMAGE_ORIGINAL
 ARROW_RIGHT_IMG=pygame.image.load("blueArrowRight.png")
 ARROW_LEFT_IMG=pygame.image.load("blueArrowLeft.png")
-arrowImages = [ARROW_LEFT_IMG, ARROW_RIGHT_IMG]
+ARROW_FLIP_IMG= pygame.image.load("flip.png")
+arrowImages = [ARROW_LEFT_IMG, ARROW_RIGHT_IMG,ARROW_FLIP_IMG]
 
 class Button:
     def __init__(self, x, y, title):
@@ -58,7 +57,7 @@ class Arrow:
         self.x = x
         self.y = y
         self.w = 75
-        self.h = 70
+        self.h = 75
 
 class Slider:
     def __init__(self, x, y, title):
@@ -86,7 +85,7 @@ for i in range(8):
     button = Button(820,100+i * 75,titles[i])
     buttons.append(button)
 
-for i in range(2):
+for i in range(3):
     arrow = Arrow(465+i*80,620, arrowTitles[i])
     arrows.append(arrow)
 
@@ -95,7 +94,6 @@ for i in range(2):
 #Menu screen functions
 def drawUI():
     for i in range(len(arrows)):
-
         screen.blit(arrowImages[i],(arrows[i].x,arrows[i].y))
 
     for slider in sliders:
@@ -251,6 +249,12 @@ def checkArrow(mouse_x, mouse_y):
                 IMAGE_CURRENT = pygame.image.load(rotatedPhotoR)
                 IMAGE_CURRENT = scaledImage(IMAGE_CURRENT)
                 PREV_FILENAME = rotatedPhotoR
+            if arrow.title == "flip":
+                mirroredPhoto = filters.flip(PREV_FILENAME)
+                IMAGE_CURRENT = pygame.image.load(mirroredPhoto)
+                IMAGE_CURRENT = scaledImage(IMAGE_CURRENT)
+                PREV_FILENAME = rotatedPhotoR
+            
 
 
 running = True
