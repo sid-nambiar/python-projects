@@ -20,16 +20,22 @@ buttons=[]
 sliders=[]
 arrows=[]
 arrowTitles=["rot L", "rot R","flip L", "flip R"]
-titles=["Black & White","Blur","Invert","Sharpen","Edge Detection","Sepia","Reset"]
+titles=["Black & White","Blur","Invert","Sharpen","Edge Detection","Sepia","Reset", "New Image"]
 sliderTitles=["Saturation", "Brightness"]
 #fonts
 myfont = pygame.font.SysFont('ArialBold', 24)
 #colors
 white=(255 ,255, 255)
 
-#images
+#image
+
 FILENAME = "dog.png"
-PREV_FILENAME = "dog.png"
+
+USER_INPUT = input("What image do you want to upload? ")
+if USER_INPUT != "":
+    FILENAME = USER_INPUT
+
+PREV_FILENAME = FILENAME
 IMAGE_ORIGINAL = pygame.image.load(FILENAME)
 IMAGE_ORIGINAL = scaledImage(IMAGE_ORIGINAL)
 BUTTON_IMG = pygame.image.load("button.png")
@@ -76,7 +82,7 @@ for i in range(2):
     sliders.append(slider)
 
 #buttons
-for i in range(7):
+for i in range(8):
     button = Button(820,100+i * 75,titles[i])
     buttons.append(button)
 
@@ -108,7 +114,7 @@ def pointInRect(pt_x, pt_y, rect_x, rect_y, rect_w, rect_h):
         return False
 
 def checkButtons():
-    global IMAGE_CURRENT, PREV_FILENAME
+    global IMAGE_CURRENT, PREV_FILENAME,USER_INPUT, FILENAME, IMAGE_ORIGINAL
     x = pygame.mouse.get_pos()[0]
     y = pygame.mouse.get_pos()[1]
     for button in buttons:
@@ -151,7 +157,14 @@ def checkButtons():
                 IMAGE_CURRENT = IMAGE_ORIGINAL
                 PREV_FILENAME = FILENAME
 
-
+            elif button.title == "New Image":
+                USER_INPUT = input("What image do you want to upload? ")
+                if USER_INPUT != "":
+                    FILENAME = USER_INPUT
+                    PREV_FILENAME = FILENAME
+                    IMAGE_ORIGINAL = pygame.image.load(FILENAME)
+                    IMAGE_ORIGINAL = scaledImage(IMAGE_ORIGINAL)
+                    IMAGE_CURRENT = IMAGE_ORIGINAL
 
 def changeSaturationLevel(mouse_x,slider):
     #left = -
