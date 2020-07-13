@@ -8,8 +8,6 @@ brightnessLevel = 1
 
 angle = 0
 
-
-
 def diySepia(filename):
     new_name = "sepia.png"
     img = Image.open(filename)
