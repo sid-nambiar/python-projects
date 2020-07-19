@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys,os.path
 import filters
 
 pygame.init()
@@ -15,28 +15,40 @@ def scaledImage(img):
 
 #bools
 dragging = False
+dark_mode = False
 #constants
 buttons=[]
 sliders=[]
 arrows=[]
 arrowTitles=["rot L", "rot R","flip"]
-titles=["Black & White","Blur","Invert","Sharpen","Edge Detection","Sepia","Reset", "New Image"]
+titles=["Black & White","Blur","Invert","Sharpen","Edge Detection","Sepia","Reset", "New Image","Save Final"]
 sliderTitles=["Saturation", "Brightness"]
 #fonts
 myfont = pygame.font.SysFont('ArialBold', 24)
 #colors
 white=(255 ,255, 255)
+grey = (77, 77, 77)
+
 
 FILENAME = "dog.png"
 
-USER_INPUT = input("What image do you want to upload? ")
-if USER_INPUT != "":
-    FILENAME = USER_INPUT
+
+def input_check():
+    global FILENAME
+    while True:
+        USER_INPUT = input("What image do you want to upload? ")
+        if os.path.isfile(USER_INPUT):
+            FILENAME = USER_INPUT
+            break
+        else:
+            print("file does not exist try checking your spelling and try again")
 
 PREV_FILENAME = FILENAME
 IMAGE_ORIGINAL = pygame.image.load(FILENAME)
 IMAGE_ORIGINAL = scaledImage(IMAGE_ORIGINAL)
 BUTTON_IMG = pygame.image.load("button.png")
+BUTTON_DARK = pygame.image.load("button_dark.png")
+CURRENT_BUTTON = BUTTON_IMG
 IMAGE_CURRENT = IMAGE_ORIGINAL
 ARROW_RIGHT_IMG=pygame.image.load("blueArrowRight.png")
 ARROW_LEFT_IMG=pygame.image.load("blueArrowLeft.png")
@@ -81,8 +93,8 @@ for i in range(2):
     sliders.append(slider)
 
 #buttons
-for i in range(8):
-    button = Button(820,100+i * 75,titles[i])
+for i in range(9):
+    button = Button(820, 47+i * 75,titles[i])
     buttons.append(button)
 
 for i in range(3):
@@ -101,7 +113,7 @@ def drawUI():
         pygame.draw.ellipse(screen, (0, 0, 100), (slider.Ex, slider.Ey, slider.ellipseHeight, slider.ellipseWidth), 0)
 
     for button in buttons:
-        screen.blit(BUTTON_IMG, (button.x,button.y))
+        screen.blit(CURRENT_BUTTON, (button.x,button.y))
         buttonLabel = myfont.render(button.title, 1, pygame.color.THECOLORS['black'])
         screen.blit(buttonLabel, (button.x+10, button.y+12))
 
@@ -156,13 +168,13 @@ def checkButtons():
                 PREV_FILENAME = FILENAME
 
             elif button.title == "New Image":
-                USER_INPUT = input("What image do you want to upload? ")
-                if USER_INPUT != "":
-                    FILENAME = USER_INPUT
-                    PREV_FILENAME = FILENAME
-                    IMAGE_ORIGINAL = pygame.image.load(FILENAME)
-                    IMAGE_ORIGINAL = scaledImage(IMAGE_ORIGINAL)
-                    IMAGE_CURRENT = IMAGE_ORIGINAL
+                input_check()
+                PREV_FILENAME = FILENAME
+                IMAGE_ORIGINAL = pygame.image.load(FILENAME)
+                IMAGE_ORIGINAL = scaledImage(IMAGE_ORIGINAL)
+                IMAGE_CURRENT = IMAGE_ORIGINAL
+            elif button.title == "Save Final":
+                filters.saveFinal(PREV_FILENAME)
 
 def changeSaturationLevel(mouse_x,slider):
     #left = -
@@ -191,23 +203,15 @@ def changeSaturationLevel(mouse_x,slider):
 
 def changeBrightnessLevel(mouse_x,slider):
     global IMAGE_CURRENT, PREV_FILENAME
-
     diff = mouse_x-slider.middleX
-
     half = slider.lineWidth / 2
-
     distPercent = abs(diff / half)
-    print("dist percent: ", distPercent)
-
-
     if diff >= 0:
-        newBrightnessLevel = distPercent + 1
+        newBrightnessLevel = min(distPercent + 1, 1.95)
         filters.brightnessLevel = newBrightnessLevel
-        print("newBrightness level: ", newBrightnessLevel)
     elif diff < 0:
-        newBrightnessLevel = max(0.5, 1-distPercent)
+        newBrightnessLevel = max(0.55, 1-distPercent)
         filters.brightnessLevel = newBrightnessLevel
-        print("newBrightness level: ", newBrightnessLevel)
 
 
     brightPhoto = filters.brightness(PREV_FILENAME)
@@ -253,7 +257,7 @@ def checkArrow(mouse_x, mouse_y):
                 mirroredPhoto = filters.flip(PREV_FILENAME)
                 IMAGE_CURRENT = pygame.image.load(mirroredPhoto)
                 IMAGE_CURRENT = scaledImage(IMAGE_CURRENT)
-                PREV_FILENAME = rotatedPhotoR
+                PREV_FILENAME = mirroredPhoto
             
 
 
@@ -262,13 +266,19 @@ checkingSaturation = False
 checkingBrightness = False
 #game loop
 while running:
-    screen.fill(white)
+    if dark_mode == False:
+        screen.fill(white)
+        CURRENT_BUTTON = BUTTON_IMG
+    else:
+        screen.fill(grey)
+        CURRENT_BUTTON = BUTTON_DARK
+        
 
     for event in pygame.event.get():
         #check if you've exited the game
         if event.type == pygame.QUIT:
             running = False
-
+    
         #check if you clicked
         if event.type == pygame.MOUSEBUTTONDOWN:
             if checkingSaturation==True:
@@ -288,6 +298,11 @@ while running:
             if dragging == True:
                 mouse_x, mouse_y = event.pos
                 checkSlider(mouse_x,mouse_y)
+        elif event.type == pygame.KEYDOWN:
+            if dark_mode == False:
+                dark_mode = True
+            else:
+                dark_mode= False
 
     screen.blit(IMAGE_CURRENT, (0,0))
 

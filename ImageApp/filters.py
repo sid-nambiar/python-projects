@@ -113,15 +113,10 @@ def flip(filename):
     img = Image.open(filename)
     img = PIL.ImageOps.mirror(img)
     img.save(new_name)
+    return new_name
 
-def exampleFilters(filename):
-    img = Image.open("dogs.jpg")
-    width, height = img.size
-    img0 = img.convert('LA')
-    img1 = img.rotate(180)
-    img = img.filter(ImageFilter.BLUR)
-    img3 = img.resize((int(width/2), int(height/2)))
-    img4 = img.transpose(Image.FLIP_LEFT_RIGHT)
-    img5 = PIL.ImageOps.invert(img)
-
-    img0.save("0.png")
+def saveFinal(filename):
+    new_name = "RESULT.png"
+    img = Image.open(filename)
+    img.save(new_name)
+    
