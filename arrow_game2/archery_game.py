@@ -1,6 +1,5 @@
 
 import pygame, sys
-import gradient
 import time
 import scoreChart
 pygame.init()
